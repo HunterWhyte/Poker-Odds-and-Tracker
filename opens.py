@@ -1,18 +1,16 @@
-#test
-
 handlookupSB = {"2.5x/cont" : ["aa","aks","aqs","ajs","ats","a9s", "kk", "kqs", "qq" , "ajo",
-                              "ato", "99", "88", "77", "66"],
-               "2.5x/fold"  : ["k7s","k6s","k5s","k4s","k3s","k2s","q6s","q5s","q4s","q3s",
-                              "q2s","j6s","t6s","96s","86s","76s","75s","65s","64s","54s",
-                              "53s","43s","87o","76o","65o","a6o","a5o","a4o","a3o", "a2o",],
-               "limp/shove" : ["a5s","a4s","a3s","a2s","ako","aqo","jj","tt","55","44",
-                               "33","22"],
-               "limp/call"  : ["a8s","a7s","a6s","kjs","kts","k9s","k8s","kqo","qjs","qts",
-                               "q9s","q8s","q7s","kjo","qjo","jts","j9s","j8s","j7s","kto","qto","jto","t9s","t8s",
-                               "t7s","a9o","k9o","q9o","j9o","t9o","98s","97s","a8o","98o","87s","a7o",],
-               "limp/fold"  : ["j5s","j4s","j3s","j2s","t5s","t4s","95s","94s","k8o","q8o","j8o","t8o","85s","84s","k7o",
-                               "q7o","j7o","t7o","97o","74s","k6o","86o","63s","k5o","52s","42s","32s"]
-               }
+                               "ato", "99", "88", "77", "66"],
+                "2.5x/fold"  : ["k7s","k6s","k5s","k4s","k3s","k2s","q6s","q5s","q4s","q3s",
+                                "q2s","j6s","t6s","96s","86s","76s","75s","65s","64s","54s",
+                                "53s","43s","87o","76o","65o","a6o","a5o","a4o","a3o", "a2o",],
+                "limp/shove" : ["a5s","a4s","a3s","a2s","ako","aqo","jj","tt","55","44",
+                                "33","22"],
+                "limp/call"  : ["a8s","a7s","a6s","kjs","kts","k9s","k8s","kqo","qjs","qts",
+                                "q9s","q8s","q7s","kjo","qjo","jts","j9s","j8s","j7s","kto","qto","jto","t9s","t8s",
+                                "t7s","a9o","k9o","q9o","j9o","t9o","98s","97s","a8o","98o","87s","a7o",],
+                "limp/fold"  : ["j5s","j4s","j3s","j2s","t5s","t4s","95s","94s","k8o","q8o","j8o","t8o","85s","84s","k7o",
+                                "q7o","j7o","t7o","97o","74s","k6o","86o","63s","k5o","52s","42s","32s"]
+                }
 handlookupBU = {"min-raise/call" : ["aa","aks","aqs","ajs","ats","a9s","ako","kk","kqs","aqo","qq","ajo","jj","ato","tt",
                                     "99","88","77","66","55"],
                 "min-raise/fold" : ["a8s","a7s","a6s","a5s","a4s","a3s","a2s","kjs","kts","k9s","k8s","k7s","k6s","k5s",
@@ -63,40 +61,27 @@ nashcall =     {"aa":"20+","aks":"20+","aqs":"20+","ajs":"20+","ats":"20+","a9s"
                 "k3o":"8.7","q3o":"5.9","j3o":"4.5","t3o":"3.6","93o":"3.1","83o":"2.9","73o":"2.9","63o":"2.9","53o":"3.1","43o":"3.0","33":"20+","32s":"3.3",
                 "a2o":"15.8","k2o":"8.1","q2o":"5.6","j2o":"4.2","t2o":"3.5","92o":"3.0","82o":"2.8","72o":"2.6","62o":"2.7","52o":"2.8","42o":"2.7","32o":"2.6",
                 "22": "15.0"}
-while True:
-    s = 0
-    hand = input(">> ")
-    if hand[0:2] == "sb":
-        for i in handlookupSB:
-            if hand[3:] in handlookupSB[i]:
-                print(i)
-                s = 1
 
-        if s == 0:
-            print("fold")
+def sb(hand):
+    for i in handlookupSB:
+        if hand in handlookupSB[i]:
+            return(i)
+    return "fold"
 
-    if hand[0:2] == "bu":
-        for i in handlookupSB:
-            if hand[3:] in handlookupSB[i]:
-                print(i)
-                s = 1
+def bu(hand):
+    for i in handlookupBU:
+        if hand in handlookupBU[i]:
+            return(i)
+    return "fold"
 
-        if s == 0:
-            print("fold")
+def bb(hand):
+    for i in handlookupBB:
+        if hand in handlookupBB[i]:
+            return(i)
+    return("call")
 
-    if hand[0:2] == "bb":
-        for i in handlookupSB:
-            if hand[3:] in handlookupSB[i]:
-                print(i)
-                s = 1
+def np(hand):
+    return(nashpush[hand])
 
-        if s == 0:
-            print("call")
-
-    if hand[0:2] == "np":
-
-        print(nashpush[hand[3:]])
-
-    if hand[0:2] == "nc":
-
-        print(nashcall[hand[3:]])
+def nc(hand):
+    return(nashcall[hand])
