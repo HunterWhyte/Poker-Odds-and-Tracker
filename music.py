@@ -1,3 +1,5 @@
+#test
+
 handlookupSB = {"2.5x/cont" : ["aa","aks","aqs","ajs","ats","a9s", "kk", "kqs", "qq" , "ajo",
                               "ato", "99", "88", "77", "66"],
                "2.5x/fold"  : ["k7s","k6s","k5s","k4s","k3s","k2s","q6s","q5s","q4s","q3s",
