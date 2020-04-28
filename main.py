@@ -3,6 +3,7 @@ from tkinter.ttk import *
 import tkinter.font as tkfont
 import opens
 import results
+import odds
 import tkinter.scrolledtext as scrolledtext
 
 window = Tk()
