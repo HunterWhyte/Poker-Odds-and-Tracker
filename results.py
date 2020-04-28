@@ -45,7 +45,7 @@ def display_results(stakes):
     fig, ax1 = plt.subplots()
 
     color = 'tab:red'
-    plt.suptitle(stakes + " Spin & Go Results")
+    plt.suptitle(stakes + " Spin & Go Results || win% ="+ "{:8.4f}".format((winlossper*100)) + "%")
     ax1.set_xlabel('tournaments')
     ax1.set_ylabel('winnings USD', color=color)
     ax1.plot(bankroll, color=color)
