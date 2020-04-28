@@ -196,6 +196,7 @@ hand2card2entry.grid(column = 16, row = 3, sticky = "w")
 hand2oddslabel = Label(window, text="0.00%", font=lg)
 hand2oddslabel.grid(column = 15, row = 4, columnspan = 4, sticky = "w")
 
+
 def calculate_odds():
     return
 
