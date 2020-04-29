@@ -2,6 +2,18 @@ import itertools as iter
 
 allcards = ['2c', '2h', '2d', '2s', '3c', '3h', '3d', '3s', '4c', '4h', '4d', '4s', '5c', '5h', '5d', '5s', '6c', '6h', '6d', '6s', '7c', '7h', '7d', '7s', '8c', '8h', '8d', '8s', '9c', '9h', '9d', '9s', 'tc', 'th', 'td', 'ts', 'jc', 'jh', 'jd', 'js', 'qc', 'qh', 'qd', 'qs', 'kc', 'kh', 'kd', 'ks', 'ac', 'ah', 'ad', 'as']
 
+def seven_card(h1,h2):
+    # params: seven card poker hands
+    h1options = [list(x) for x in iter.combinations(h1, 5)]
+    h2options = [list(x) for x in iter.combinations(h2, 5)]
+    blank, hand1 = poker(h1options)
+    blank, hand2 = poker(h2options)
+    result, hand = poker([hand1, hand2])
+    if result == 0:
+        return "tie"
+    if result == 1:
+        return hand == hand1
+
 def poker(hands):
     "Return a list of winning hands: poker([hand,...]) => [hand,...]"
     result = [x for x in hands if hand_rank(x) == hand_rank(max(hands, key=hand_rank))]
@@ -29,17 +41,7 @@ def group(items):
     return sorted(groups, reverse=True)
 def unzip(pairs):
     return zip(*pairs)
-def seven_card(h1,h2):
-    # params: seven card poker hands
-    h1options = [list(x) for x in iter.combinations(h1, 5)]
-    h2options = [list(x) for x in iter.combinations(h2, 5)]
-    blank, hand1 = poker(h1options)
-    blank, hand2 = poker(h2options)
-    result, hand = poker([hand1, hand2])
-    if result == 0:
-        return "tie"
-    if result == 1:
-        return hand == hand1
+
 
 def test():
     "Test cases for the functions in poker program"
