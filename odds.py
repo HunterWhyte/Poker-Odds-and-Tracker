@@ -2,6 +2,45 @@ import itertools as iter
 import time
 from joblib import Parallel, delayed
 allcards = ['as', 'ks', 'qs', 'js', 'ts', '9s', '8s', '7s', '6s', '5s', '4s', '3s', '2s', 'ah', 'kh', 'qh', 'jh', 'th', '9h', '8h', '7h', '6h', '5h', '4h', '3h', '2h', 'ad', 'kd', 'qd', 'jd', 'td', '9d', '8d', '7d', '6d', '5d', '4d', '3d', '2d', 'ac', 'kc', 'qc', 'jc', 'tc', '9c', '8c', '7c', '6c', '5c', '4c', '3c', '2c']
+#generate preflop LUT
+possiblehands = []
+for x in range(len(allcards)):
+    for y in range(x+1,len(allcards)):
+        hand = [allcards[x], allcards[y]]
+        possiblehands.append(hand)
+allmatchups = []
+for i in range(len(possiblehands)):
+    for j in range(i+1, len(possiblehands)):
+        matchup = possiblehands[i] + possiblehands[j]
+        cardsinplay = [possiblehands[i][0], possiblehands[i][1], possiblehands[j][0], possiblehands[j][1]]
+        count = [cardsinplay.count(x) for x in cardsinplay]
+        if max(count) == 1:
+            allmatchups.append(matchup)
+
+preflopLUT = {}
+f  = open("matchups.txt", "r")
+matchups = f.read().rstrip().split("\n")
+f.close()
+for i in range(len(matchups)):
+    matchups[i] = matchups[i].split(" ")
+for i in range(len(possiblehands)):
+    preflopLUT[allmatchups[i]] = matchups[i]
+    # 1712304 total matches
+
+print(len(allmatchups))
+print(len(preflopLUT))
+def preflop(h1,h2):
+    try:
+        result = preflopLUT[h1+h2]
+        winsper = 100*float(result[0])/1712304
+        tiesper = 100*float(result[1])/1712304
+        return winsper, tiesper
+    except:
+        result = preflopLUT[h2+h1]
+        result = preflopLUT[h1+h2]
+        winsper = 100 - 100*float(result[0])/1712304
+        tiesper = 100*float(result[1])/1712304
+        return winsper, tiesper
 
 def seven_card(h1,h2):
     # params: seven card poker hands
@@ -44,19 +83,6 @@ def group(items):
 def unzip(pairs):
     return zip(*pairs)
 
-
-def test():
-    "Test cases for the functions in poker program"
-    # sf = "6C 7C 8C 9C TC".lower().split()
-    # fk = "9D 9H 9S 9C 7D".lower().split()
-    # fh = "TD TC TH 7C 7D".lower().split()
-    # tp = "5S 5D 9H 9C 6S".lower().split()
-    # assert poker([sf, fk, fh]) == sf
-    # assert poker([fh, fk]) == fk
-    # assert poker([fh, fh]) == "tie"
-    # assert poker([sf]) == sf
-    # assert poker([sf] + 99 * [fh]) == sf
-    return None
 def winloss(h1,h2,communities):
     ties=0
     wins=0
@@ -86,6 +112,10 @@ def holdem_odds(h1c1, h1c2,h2c1, h2c2, fc1, fc2, fc3, tc, rc):
         cardsinplay.remove(i)
     if fc1 == "":
         print("preflop")
+        h1 = [h1c1, h1c2]
+        h2 = [h2c1, h2c2]
+        return preflop(h1, h2)
+
     elif tc == "":
         print("flop")
         communities = [list(x) for x in (iter.combinations(cardsinplay, 2))]
