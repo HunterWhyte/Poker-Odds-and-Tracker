@@ -308,13 +308,17 @@ graphevbutton = Button(window, text='graph EV', command=graph_ev, width = 9)
 
 #
 ysep = Separator(window, orient=VERTICAL)
-ysep.place(x=400, y=0,  height = 600, anchor=NW)
+ysep.place(x=400, y=0,  height = 500, anchor=NW)
+ysepleft = Separator(window, orient=VERTICAL)
+ysepleft.place(x=1, y=0,  height = 500, anchor=NW)
+ysepright = Separator(window, orient=VERTICAL)
+ysepright.place(x=799, y=0,  height = 500, anchor=NW)
 hsep = Separator(window, orient=HORIZONTAL)
 hsep.place(x=0, y=250,  width = 800, anchor=NW)
 hseptop = Separator(window, orient=HORIZONTAL)
 hseptop.place(x=0, y=1,  width = 800, anchor=NW)
 hsepbottom = Separator(window, orient=HORIZONTAL)
-hsepbottom.place(x=0, y=500,  width = 800, anchor=NW)
+hsepbottom.place(x=0, y=499,  width = 800, anchor=NW)
 
 #
 lookuplabel.place(x=15, y=0, anchor=NW)
@@ -375,4 +379,5 @@ graphevbutton.place(x=650, y=340, anchor=NW)
 clearcardsbutton.place(x=405, y=390, anchor=NW)
 s = Style()
 s.theme_use('default')
+
 window.mainloop()
