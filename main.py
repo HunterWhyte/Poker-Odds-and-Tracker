@@ -314,6 +314,7 @@ def increasefont():
     tkfont.nametofont('TkDefaultFont').configure(size=fontsize)  # change default font size
     return None
 
+
 def decreasefont():
     global fontsize, lg ,tkfont
     fontsize += -1
