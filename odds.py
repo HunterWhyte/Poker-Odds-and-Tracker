@@ -11,33 +11,25 @@ def holdem_odds(h1c1, h1c2,h2c1, h2c2, fc1, fc2, fc3, tc, rc):
     for i in knowncards:
         cardsinplay.remove(i)
     if fc1 == "":
-        print("preflop")
         return preflop(h1c1, h1c2, h2c1, h2c2)
 
     elif tc == "":
-        print("flop")
         communities = [list(x) for x in (iter.combinations(cardsinplay, 2))]
         h1 = [h1c1, h1c2, fc1, fc2, fc3]
         h2 = [h2c1, h2c2, fc1, fc2, fc3]
-        #start = time.time()
         wins,ties = winloss(h1,h2,communities)
-        #print(time.time()-start)
         winper = wins/ len(communities)
         tiesper = ties / len(communities)
         return winper*100, tiesper*100
     elif rc == "":
-        print("turn")
         communities = [[x] for x in cardsinplay]
         h1 = [h1c1, h1c2, fc1, fc2, fc3, tc]
         h2 = [h2c1, h2c2, fc1, fc2, fc3, tc]
-        #start = time.time()
         wins,ties = winloss(h1,h2,communities)
-        #print(time.time()-start)
         winper = wins / len(communities)
         tiesper = ties / len(communities)
         return winper*100, tiesper*100
     else:
-        print("river")
         h1 = [h1c1, h1c2, fc1, fc2, fc3, tc, rc]
         h2 = [h2c1, h2c2, fc1, fc2, fc3, tc, rc]
         result = seven_card(h1, h2)

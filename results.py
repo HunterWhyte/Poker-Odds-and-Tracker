@@ -58,6 +58,7 @@ def display_results(stakes):
     else:
         fig, ax = plt.subplots()
         plt.suptitle("no data available for these stakes")
+        fig.canvas.set_window_title('Spin & Go Results')
         plt.show()
         return
 
@@ -68,7 +69,7 @@ def display_results(stakes):
         stakes = "all"
     plt.suptitle(stakes + " Spin & Go Results || win% ="+ "{:8.4f}".format((winlossper*100)) + "%")
     ax1.set_xlabel('tournaments')
-    ax1.set_ylabel('winnings USD', color=color)
+    ax1.set_ylabel('winnings $', color=color)
     ax1.plot(bankroll, color=color)
     ax1.tick_params(axis='y', labelcolor=color)
     ax1.set_ylim([0, (max(chips) + 2000)/2000])
@@ -80,6 +81,7 @@ def display_results(stakes):
     ax2.tick_params(axis='y', labelcolor=color)
     ax2.set_ylim([0, max(chips) + 2000])
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    fig.canvas.set_window_title('Spin & Go Results')
     plt.show()
     return
 
@@ -127,6 +129,7 @@ def display_ev(stakes):
     else:
         fig, ax = plt.subplots()
         plt.suptitle("no data available for these stakes")
+        fig.canvas.set_window_title('Spin & Go Chip EV')
         plt.show()
         return
 
@@ -148,5 +151,6 @@ def display_ev(stakes):
     ax2.tick_params(axis='y', labelcolor=color)
     ax2.set_ylim([0, max(chips) + 2000])
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    fig.canvas.set_window_title('Spin & Go Chip EV')
     plt.show()
     return

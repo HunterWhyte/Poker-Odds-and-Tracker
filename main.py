@@ -3,12 +3,12 @@ from tkinter.ttk import *
 import tkinter.font as tkfont
 import opens
 import results
-#import odds #comment out for gui testing
+import odds #comment out for gui testing
 import tkinter.scrolledtext as scrolledtext
 
 window = Tk()
 # width x height + x_offset + y_offset:
-window.geometry("800x600+0+0")
+window.geometry("800x500+0+0")
 window.iconphoto(False, PhotoImage(file='icon.png'))
 window.title("Spin & Go Helper")
 #card lists
@@ -17,7 +17,7 @@ deck = ['as', 'ks', 'qs', 'js', 'ts', '9s', '8s', '7s', '6s', '5s', '4s', '3s', 
 
 # hand lookup
 fontsize = 20
-lg = tkfont.Font(family="Lucida Grande", size=fontsize) # use for widgets that don't follow default font size
+lg = tkfont.Font(family="TkDefaultFont", size=fontsize) # use for widgets that don't follow default font size
 tkfont.nametofont('TkDefaultFont').configure(size=fontsize) # change default font size
 luhand = StringVar()
 luhand.set("")
@@ -42,10 +42,10 @@ def lookuphand():
         if pos == 5:
             result = opens.nc(hand)
     resultlabel.configure(text = result)
-lookuplabel = Label(window, text="PF Lookup:", font=lg)
+lookuplabel = Label(window, text="PF lookup:", font=lg)
 handentry = Entry(window, width = 4,font = lg, textvariable=luhand)
 resultlabel = Label(window, text="preflop hand", font=lg, justify = "center", anchor = "center")
-lookupbutton = Button(window, text='Look up', command=lookuphand, width = 7)
+lookupbutton = Button(window, text='lookup', command=lookuphand, width = 7)
 rad1 = Radiobutton(window,text='BU open  ', value=1, variable=position)
 rad2 = Radiobutton(window,text='SB open  ', value=2, variable=position)
 rad3 = Radiobutton(window,text='BB defend', value=3, variable=position)
@@ -85,8 +85,8 @@ def saveresults():
 wintrackinglabel = Label(window, text="win tracking:", font=lg)
 
 
-buyinlabel = Label(window, text="buyin$:", font=lg)
-prizepoollabel = Label(window, text="prize$:", font=lg)
+buyinlabel = Label(window, text="buyin:", font=lg)
+prizepoollabel = Label(window, text="prize:", font=lg)
 buyinentry = Entry(window, width = 5,font = lg, justify = "right", textvariable = buyinvalue)
 prizepoolentry = Entry(window, width = 5,font = lg, justify = "right", textvariable = prizepoolvalue)
 
@@ -94,7 +94,7 @@ prizepoolentry = Entry(window, width = 5,font = lg, justify = "right", textvaria
 win = Radiobutton(window,text='W', value=1, variable=winloss)
 loss = Radiobutton(window,text='L', value=0, variable=winloss)
 
-enterresultbutton = Button(window, text='record result', command=saveresults)
+enterresultbutton = Button(window, text='record result', command=saveresults, width = 10)
 
 
 def list_results():
@@ -109,23 +109,25 @@ def list_results():
     txt.insert(1.0, results.get_results())
     b = Button(win, text="Okay", command=win.destroy)
     b.grid(row=1, column=0)
-listresultbutton = Button(window, text='list results', command=list_results)
 
 def graph_results():
-    buyin = buyinentry.get()
-    if buyin == "all" or buyin == "":
+    stakes = graphstakes.get()
+    if stakes == "all" or stakes == "":
         results.display_results(0)
-        buyinvalue.set("")
-        return
+        return None
     try:
-        buyin = float(buyin)
-        buyinvalue.set("")
+        stakes = float(stakes)
     except:
-        buyinvalue.set("inval")
-        return
-    results.display_results(str(buyin))
-    return
+        graphstakes.set("inval")
+        return None
+    results.display_results(str(stakes))
+    return None
 graphresultbutton = Button(window, text='graph results', command=graph_results)
+graphresultslabel = Label(window, text = "display results:")
+stakeslabel = Label(window, text = "stakes:")
+graphstakes = StringVar()
+graphstakesentry = Entry(window, textvariable= graphstakes, font = lg, width = 5, justify = "right")
+listresultbutton = Button(window, text='list results', command=list_results, width = 10)
 
 # odds calculator gui
 hand1card1 = StringVar()
@@ -240,7 +242,7 @@ def clear_cards():
     luhand.set("")
     winloss.set(0)
     position.set(1)
-
+    graphstakes.set("")
     hand1oddslabel.configure(text="0.00%")
     hand2oddslabel.configure(text="0.00%")
     tieoddslabel.configure(text="0.00%")
@@ -251,7 +253,7 @@ def clear_cards():
 
 # EV calc gui
 calculateoddsbutton = Button(window, text='calculate', command=calculate_odds)
-clearcardsbutton = Button(window, text='clear', command=clear_cards)
+clearcardsbutton = Button(window, text='clear all', command=clear_cards)
 
 bet = StringVar()
 pot = StringVar()
@@ -259,8 +261,8 @@ pot = StringVar()
 evcalculatorlabel = Label(window, text="all-in EV:", font=lg)
 betlabel = Label(window, text="bet:", font=lg)
 potlabel = Label(window, text="pot:", font=lg)
-betentry = Entry(window, width = 5,font = lg, justify = "left", textvariable = bet)
-potentry = Entry(window, width = 5,font = lg, justify = "left", textvariable = pot)
+betentry = Entry(window, width = 4,font = lg, justify = "left", textvariable = bet)
+potentry = Entry(window, width = 4,font = lg, justify = "left", textvariable = pot)
 evlabel = Label(window, text="+0.0", font=lg)
 
 
@@ -282,7 +284,6 @@ def calculate_ev():
         evlabel.configure(text = "+" + "{:.1f}".format(expectedvalue))
     else:
         evlabel.configure(text="{:.1f}".format(expectedvalue))
-    print(expectedvalue)
     return None
 
 def save_ev():
@@ -299,64 +300,79 @@ def graph_ev():
     results.display_ev(0)
     return None
 
-calculateevbutton = Button(window, text='calculate', command=calculate_ev)
+calculateevbutton = Button(window, text='calculate', command=calculate_ev, width = 8)
 
-enterevbutton = Button(window, text='record EV', command=save_ev)
+enterevbutton = Button(window, text='record EV', command=save_ev, width = 8)
 
-graphevbutton = Button(window, text='graph EV', command=graph_ev)
+graphevbutton = Button(window, text='graph EV', command=graph_ev, width = 8)
 
-
-# progress = Progressbar(window, orient = HORIZONTAL,
-#               length = 150, mode = 'determinate')
-# progress.grid(column = 10, row = 5, columnspan = 5)
+#
 ysep = Separator(window, orient=VERTICAL)
 ysep.place(x=400, y=0,  height = 600, anchor=NW)
-lookuplabel.place(x=15, y=0, anchor=NW)
-lookuplabel.place(x=15, y=0, anchor=NW)
-resultlabel.place(x=100, y=80, anchor=CENTER)
-handentry.place(x=65, y=110, anchor=NW)
-rad1.place(x=230, y=10, anchor=NW)
-rad2.place(x=230, y=50, anchor=NW)
-rad3.place(x=230, y=90, anchor=NW)
-rad4.place(x=230, y=130, anchor=NW)
-rad5.place(x=230, y=170, anchor=NW)
-lookupbutton.place(x=40, y=160, anchor=NW)
-#
-# wintrackinglabel.place(x=5, y=160, anchor=NW)
-# buyinlabel.place(x=5, y=160, anchor=NW)
-# prizepoollabel.place(x=5, y=160, anchor=NW)
-# buyinentry.place(x=5, y=160, anchor=NW)
-# prizepoolentry.place(x=5, y=160, anchor=NW)
-# win.place(x=5, y=160, anchor=NW)
-# loss.place(x=5, y=160, anchor=NW)
-# enterresultbutton.place(x=5, y=160, anchor=NW)
-# listresultbutton.place(x=5, y=160, anchor=NW)
-# graphresultbutton.place(x=5, y=160, anchor=NW)
-#
-# oddscalculatorlabel.grid(column = 7, row = 0, sticky = "w")
-# hand1oddslabel.grid(column = 8, row = 2, columnspan = 4, sticky = "w")
-# hand1card1entry.grid(column = 8, row = 1, sticky = "w")
-# hand1card2entry.grid(column = 9, row = 1, sticky = "w")
-# flopcard1entry.grid(column = 10, row = 3, sticky = "w")
-# flopcard2entry.grid(column = 11, row = 3, sticky = "w")
-# flopcard3entry.grid(column = 12, row = 3, sticky = "w")
-# turncardentry.grid(column = 13, row = 3, sticky = "w")
-# rivercardentry.grid(column = 14, row = 3, sticky = "w")
-# hand2card1entry.grid(column = 15, row = 1, sticky = "w")
-# hand2card2entry.grid(column = 16, row = 1, sticky = "w")
-# hand2oddslabel.grid(column = 15, row = 2, columnspan = 4, sticky = "w")
-# tielabel.grid(column = 10, row = 0, columnspan = 4, sticky = "w")
-# tieoddslabel.grid(column = 12, row = 0, columnspan = 4, sticky = "w")
-# calculateoddsbutton.grid(column = 10, row = 4, columnspan = 5)
-# clearcardsbutton.grid(column = 13, row = 9, columnspan = 6)
-# evcalculatorlabel.grid(column = 7, row = 5, columnspan = 6, padx = 17, sticky = "w")
-# betlabel.grid(column = 7, row = 6, columnspan = 4, padx = 17, sticky = "w")
-# potlabel.grid(column = 7, row = 7, columnspan = 4, padx = 17, sticky = "w")
-# betentry.grid(column = 8, row = 6, columnspan = 5, sticky = "w")
-# potentry.grid(column = 8, row = 7, columnspan = 5, sticky = "w")
-# evlabel.grid(column = 11, row = 6, rowspan = 2, columnspan = 4, sticky = "w")
-# calculateevbutton.grid(column = 10, row = 8, columnspan = 5)
-# enterevbutton.grid(column = 7, columnspan = 4, padx = 17, row = 8, sticky = "w")
-# graphevbutton.grid(column = 7, columnspan = 4, padx = 17, row = 9, sticky = "w")
+hsep = Separator(window, orient=HORIZONTAL)
+hsep.place(x=0, y=250,  width = 800, anchor=NW)
+hseptop = Separator(window, orient=HORIZONTAL)
+hseptop.place(x=0, y=1,  width = 800, anchor=NW)
+hsepbottom = Separator(window, orient=HORIZONTAL)
+hsepbottom.place(x=0, y=500,  width = 800, anchor=NW)
 
+#
+lookuplabel.place(x=15, y=0, anchor=NW)
+lookuplabel.place(x=15, y=0, anchor=NW)
+resultlabel.place(x=105, y=80, anchor=CENTER)
+handentry.place(x=65, y=110, anchor=NW)
+lookupbutton.place(x=35, y=160, anchor=NW)
+rad1.place(x=230, y=30, anchor=NW)
+rad2.place(x=230, y=70, anchor=NW)
+rad3.place(x=230, y=110, anchor=NW)
+rad4.place(x=230, y=150, anchor=NW)
+rad5.place(x=230, y=190, anchor=NW)
+#
+hsep2 = Separator(window, orient=HORIZONTAL)
+hsep2.place(x=0, y=385,  width = 800, anchor=NW)
+wintrackinglabel.place(x=5, y=250, anchor=NW)
+buyinlabel.place(x=5, y=285, anchor=NW)
+prizepoollabel.place(x=5, y=325, anchor=NW)
+buyinentry.place(x=100, y=285, anchor=NW)
+prizepoolentry.place(x=100, y=325, anchor=NW)
+win.place(x=230, y=285, anchor=NW)
+loss.place(x=320, y=285, anchor=NW)
+enterresultbutton.place(x=210, y=320, anchor=NW)
+#
+listresultbutton.place(x=210, y=390, anchor=NW)
+graphresultbutton.place(x=210, y=440, anchor=NW)
+graphresultslabel.place(x=5, y=390, anchor=NW)
+graphstakesentry.place(x=100, y=440, anchor=NW)
+stakeslabel.place(x=5, y=440, anchor=NW)
+oddsposition = 415
+oddscalculatorlabel.place(x=405, y=0, anchor=NW)
+hand1card1entry.place(x=oddsposition, y=50, anchor=NW)
+hand1card2entry.place(x=oddsposition+40, y=50, anchor=NW)
+hand1oddslabel.place(x=oddsposition, y=90, anchor=NW)
+flopcard1entry.place(x=oddsposition+90, y=120, anchor=NW)
+flopcard2entry.place(x=oddsposition+130, y=120, anchor=NW)
+flopcard3entry.place(x=oddsposition+170, y=120, anchor=NW)
+turncardentry.place(x=oddsposition+210, y=120, anchor=NW)
+rivercardentry.place(x=oddsposition+250, y=120, anchor=NW)
+hand2card1entry.place(x=oddsposition+290, y=50, anchor=NW)
+hand2card2entry.place(x=oddsposition+330, y=50, anchor=NW)
+hand2oddslabel.place(x=oddsposition+290, y=90, anchor=NW)
+tielabel.place(x=oddsposition+120, y=60, anchor=NW)
+tieoddslabel.place(x=oddsposition+170, y=60, anchor=NW)
+calculateoddsbutton.place(x=oddsposition+110, y=170, anchor=NW)
+
+#
+evcalculatorlabel.place(x=405, y=250, anchor=NW)
+betlabel.place(x=410, y=290, anchor=NW)
+potlabel.place(x=410, y=330, anchor=NW)
+betentry.place(x=465, y=290, anchor=NW)
+potentry.place(x=465, y=330, anchor=NW)
+evlabel.place(x=540, y=310, anchor=NW)
+calculateevbutton.place(x=650, y=250, anchor=NW)
+enterevbutton.place(x=650, y=295, anchor=NW)
+graphevbutton.place(x=650, y=340, anchor=NW)
+
+clearcardsbutton.place(x=405, y=390, anchor=NW)
+s = Style()
+s.theme_use('default')
 window.mainloop()
