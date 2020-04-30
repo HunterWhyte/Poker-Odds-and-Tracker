@@ -1,6 +1,7 @@
 import itertools as iter
-
-allcards = ['2c', '2h', '2d', '2s', '3c', '3h', '3d', '3s', '4c', '4h', '4d', '4s', '5c', '5h', '5d', '5s', '6c', '6h', '6d', '6s', '7c', '7h', '7d', '7s', '8c', '8h', '8d', '8s', '9c', '9h', '9d', '9s', 'tc', 'th', 'td', 'ts', 'jc', 'jh', 'jd', 'js', 'qc', 'qh', 'qd', 'qs', 'kc', 'kh', 'kd', 'ks', 'ac', 'ah', 'ad', 'as']
+import time
+from joblib import Parallel, delayed
+allcards = ['as', 'ks', 'qs', 'js', 'ts', '9s', '8s', '7s', '6s', '5s', '4s', '3s', '2s', 'ah', 'kh', 'qh', 'jh', 'th', '9h', '8h', '7h', '6h', '5h', '4h', '3h', '2h', 'ad', 'kd', 'qd', 'jd', 'td', '9d', '8d', '7d', '6d', '5d', '4d', '3d', '2d', 'ac', 'kc', 'qc', 'jc', 'tc', '9c', '8c', '7c', '6c', '5c', '4c', '3c', '2c']
 
 def seven_card(h1,h2):
     # params: seven card poker hands
@@ -10,8 +11,8 @@ def seven_card(h1,h2):
     blank, hand2 = poker(h2options)
     result, hand = poker([hand1, hand2])
     if result == 0:
-        return "tie"
-    if result == 1:
+        return 2
+    elif result == 1:
         return hand == hand1
 
 def poker(hands):
@@ -19,7 +20,8 @@ def poker(hands):
     result = [x for x in hands if hand_rank(x) == hand_rank(max(hands, key=hand_rank))]
     if len(result) > 1:
         return 0, result[0]
-    return 1, result[0]
+    else:
+        return 1, result[0]
 
 def hand_rank(hand):
     groups = group(["--23456789tjqka".index(r) for r,s in hand])
@@ -55,15 +57,66 @@ def test():
     # assert poker([sf]) == sf
     # assert poker([sf] + 99 * [fh]) == sf
     return None
-
+def winloss(h1,h2,communities):
+    ties=0
+    wins=0
+    results = Parallel(n_jobs=-1,verbose=10)(delayed(seven_card)(h1 + i, h2 + i)for i in communities)
+    for result in results:
+        if result == 2:
+            ties += 1
+        elif result == 1:
+            wins += 1
+    return wins, ties
+# def winlossnonp(h1,h2,communities):
+#     ties=0
+#     wins=0
+#     results = (seven_card(h1 + i, h2 + i)for i in communities)
+#     for result in results:
+#         if result == 2:
+#             ties += 1
+#         elif result == 1:
+#             wins += 1
+#     return wins, ties
 def holdem_odds(h1c1, h1c2,h2c1, h2c2, fc1, fc2, fc3, tc, rc):
-    odds = 100
-    tieodds = 5.3
     cards = [h1c1, h1c2,h2c1, h2c2, fc1, fc2, fc3, tc, rc]
     knowncards = [x for x in cards if x != ""]
 
-    availablecards = allcards
+    cardsinplay = allcards.copy()
     for i in knowncards:
-        availablecards.remove(i)
-
-    return odds, tieodds
+        cardsinplay.remove(i)
+    if fc1 == "":
+        print("preflop")
+    elif tc == "":
+        print("flop")
+        communities = [list(x) for x in (iter.combinations(cardsinplay, 2))]
+        h1 = [h1c1, h1c2, fc1, fc2, fc3]
+        h2 = [h2c1, h2c2, fc1, fc2, fc3]
+        #start = time.time()
+        wins,ties = winloss(h1,h2,communities)
+        #print(time.time()-start)
+        winper = wins/ len(communities)
+        tiesper = ties / len(communities)
+        return winper*100, tiesper*100
+    elif rc == "":
+        print("turn")
+        communities = [[x] for x in cardsinplay]
+        h1 = [h1c1, h1c2, fc1, fc2, fc3, tc]
+        h2 = [h2c1, h2c2, fc1, fc2, fc3, tc]
+        #start = time.time()
+        wins,ties = winloss(h1,h2,communities)
+        #print(time.time()-start)
+        winper = wins / len(communities)
+        tiesper = ties / len(communities)
+        return winper*100, tiesper*100
+    else:
+        print("river")
+        h1 = [h1c1, h1c2, fc1, fc2, fc3, tc, rc]
+        h2 = [h2c1, h2c2, fc1, fc2, fc3, tc, rc]
+        result = seven_card(h1, h2)
+        if result == 2:
+            return 0, 100
+        elif result == 1:
+            return 100, 0
+        else:
+            return 0,0
+    return 0
