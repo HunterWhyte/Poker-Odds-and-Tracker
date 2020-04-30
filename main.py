@@ -90,17 +90,18 @@ def saveresults():
     except:
         buyinvalue.set("inval")
         prizepoolvalue.set("inval")
-        return
+        return None
     try:
         prizepool = float(prizepool)
         prizepoolvalue.set("")
     except:
         prizepoolvalue.set("inval")
         buyinvalue.set("inval")
-        return
+        return None
     wl = winloss.get()
 
     results.add_results(buyin, prizepool, wl)
+    return None
 
 wintrackinglabel = Label(window, text="win tracking:", font=lg)
 wintrackinglabel.grid(column = 0, row = 5, columnspan = 5, sticky = "ws")
@@ -206,7 +207,7 @@ tieoddslabel.grid(column = 12, row = 0, columnspan = 4, sticky = "w")
 
 def calculate_odds():
 
-# getting input
+    # getting input
     h1c1 = hand1card1.get().lower()
     h1c2 = hand1card2.get().lower()
     h2c1 = hand2card1.get().lower()
@@ -228,7 +229,7 @@ def calculate_odds():
     if h1odds < 0: h1odds = 0
     hand1oddslabel.configure(text="{:3.1f}".format(h1odds) + "%")
     hand2oddslabel.configure(text="{:3.1f}".format(h2odds) + "%")
-    print(h1odds)
+    tieoddslabel.configure(text="{:3.1f}".format(tieodds) + "%")
     return None
 def invalid_cards():
     hand1oddslabel.configure(text="inval")
@@ -322,8 +323,16 @@ evlabel.grid(column = 11, row = 6, rowspan = 2, columnspan = 4, sticky = "w")
 def calculate_ev():
     winper = float(hand1oddslabel["text"][0:-1])/100
     lossper = float(hand2oddslabel["text"][0:-1])/100
-    towin = float(pot.get())
-    tolose = float(bet.get())
+    try:
+        towin = float(pot.get())
+    except:
+        evlabel.configure(text = "inval")
+        return None
+    try:
+        tolose = float(bet.get())
+    except:
+        evlabel.configure(text = "inval")
+        return None
     expectedvalue = winper*towin - lossper*tolose
     if expectedvalue >= 0:
         evlabel.configure(text = "+" + "{:.1f}".format(expectedvalue))
@@ -331,9 +340,19 @@ def calculate_ev():
         evlabel.configure(text="{:.1f}".format(expectedvalue))
     print(expectedvalue)
     return None
+
 def save_ev():
+    try:
+        expectedvalue = float(evlabel.cget("text"))
+    except:
+        evlabel.configure(text="inval")
+        return
+    results.add_ev(expectedvalue)
     return None
+
+
 def graph_ev():
+    results.display_ev(0)
     return None
 calculateevbutton = Button(window, text='calculate', command=calculate_ev)
 calculateevbutton.grid(column = 10, row = 8, columnspan = 5)
