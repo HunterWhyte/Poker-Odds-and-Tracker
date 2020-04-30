@@ -23,8 +23,6 @@ for i in range(len(allmatchups)):
     preflopLUT[allmatchups[i]] = matchups[i]
     # 1712304 total matches
 
-print(len(allmatchups))
-print(len(preflopLUT))
 
 def preflop(h1c1, h1c2, h2c1, h2c2):
     # generate preflop LUT

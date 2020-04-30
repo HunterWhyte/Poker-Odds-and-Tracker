@@ -46,7 +46,7 @@ def unzip(pairs):
 def winloss(h1,h2,communities):
     ties=0
     wins=0
-    results = Parallel(n_jobs=-1,verbose=10)(delayed(seven_card)(h1 + i, h2 + i)for i in communities)
+    results = Parallel(n_jobs=-1)(delayed(seven_card)(h1 + i, h2 + i)for i in communities)
     for result in results:
         if result == 2:
             ties += 1
