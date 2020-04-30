@@ -16,7 +16,7 @@ allhands = ['aa', 'aks', 'aqs', 'ajs', 'ats', 'a9s', 'a8s', 'a7s', 'a6s', 'a5s',
 deck = ['as', 'ks', 'qs', 'js', 'ts', '9s', '8s', '7s', '6s', '5s', '4s', '3s', '2s', 'ah', 'kh', 'qh', 'jh', 'th', '9h', '8h', '7h', '6h', '5h', '4h', '3h', '2h', 'ad', 'kd', 'qd', 'jd', 'td', '9d', '8d', '7d', '6d', '5d', '4d', '3d', '2d', 'ac', 'kc', 'qc', 'jc', 'tc', '9c', '8c', '7c', '6c', '5c', '4c', '3c', '2c']
 
 # hand lookup
-fontsize = 20
+fontsize = 18
 lg = tkfont.Font(family="TkDefaultFont", size=fontsize) # use for widgets that don't follow default font size
 tkfont.nametofont('TkDefaultFont').configure(size=fontsize) # change default font size
 luhand = StringVar()
@@ -94,7 +94,7 @@ prizepoolentry = Entry(window, width = 5,font = lg, justify = "right", textvaria
 win = Radiobutton(window,text='W', value=1, variable=winloss)
 loss = Radiobutton(window,text='L', value=0, variable=winloss)
 
-enterresultbutton = Button(window, text='record result', command=saveresults, width = 10)
+enterresultbutton = Button(window, text='record result', command=saveresults, width = 12)
 
 
 def list_results():
@@ -122,12 +122,12 @@ def graph_results():
         return None
     results.display_results(str(stakes))
     return None
-graphresultbutton = Button(window, text='graph results', command=graph_results)
+graphresultbutton = Button(window, text='graph results', command=graph_results, width =12)
 graphresultslabel = Label(window, text = "display results:")
 stakeslabel = Label(window, text = "stakes:")
 graphstakes = StringVar()
 graphstakesentry = Entry(window, textvariable= graphstakes, font = lg, width = 5, justify = "right")
-listresultbutton = Button(window, text='list results', command=list_results, width = 10)
+listresultbutton = Button(window, text='list results', command=list_results, width = 12)
 
 # odds calculator gui
 hand1card1 = StringVar()
@@ -300,11 +300,11 @@ def graph_ev():
     results.display_ev(0)
     return None
 
-calculateevbutton = Button(window, text='calculate', command=calculate_ev, width = 8)
+calculateevbutton = Button(window, text='calculate', command=calculate_ev, width = 9)
 
-enterevbutton = Button(window, text='record EV', command=save_ev, width = 8)
+enterevbutton = Button(window, text='record EV', command=save_ev, width = 9)
 
-graphevbutton = Button(window, text='graph EV', command=graph_ev, width = 8)
+graphevbutton = Button(window, text='graph EV', command=graph_ev, width = 9)
 
 #
 ysep = Separator(window, orient=VERTICAL)
@@ -337,10 +337,10 @@ buyinentry.place(x=100, y=285, anchor=NW)
 prizepoolentry.place(x=100, y=325, anchor=NW)
 win.place(x=230, y=285, anchor=NW)
 loss.place(x=320, y=285, anchor=NW)
-enterresultbutton.place(x=210, y=320, anchor=NW)
+enterresultbutton.place(x=205, y=320, anchor=NW)
 #
-listresultbutton.place(x=210, y=390, anchor=NW)
-graphresultbutton.place(x=210, y=440, anchor=NW)
+listresultbutton.place(x=205, y=390, anchor=NW)
+graphresultbutton.place(x=205, y=440, anchor=NW)
 graphresultslabel.place(x=5, y=390, anchor=NW)
 graphstakesentry.place(x=100, y=440, anchor=NW)
 stakeslabel.place(x=5, y=440, anchor=NW)
