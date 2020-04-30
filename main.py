@@ -306,6 +306,24 @@ enterevbutton = Button(window, text='record EV', command=save_ev, width = 9)
 
 graphevbutton = Button(window, text='graph EV', command=graph_ev, width = 9)
 
+
+def increasefont():
+    global fontsize, lg ,tkfont
+    fontsize += 1
+    lg.configure(size=fontsize)   # use for widgets that don't follow default font size
+    tkfont.nametofont('TkDefaultFont').configure(size=fontsize)  # change default font size
+    return None
+
+def decreasefont():
+    global fontsize, lg ,tkfont
+    fontsize += -1
+    lg.configure(size=fontsize) # use for widgets that don't follow default font size
+    tkfont.nametofont('TkDefaultFont').configure(size=fontsize)  # change default font size
+    return None
+
+increasefontbutton = Button(window, text='font size +', command=increasefont, width = 11)
+decreasefontbutton = Button(window, text='font size -', command=decreasefont, width = 11)
+
 #
 ysep = Separator(window, orient=VERTICAL)
 ysep.place(x=400, y=0,  height = 500, anchor=NW)
@@ -375,8 +393,10 @@ evlabel.place(x=540, y=310, anchor=NW)
 calculateevbutton.place(x=650, y=250, anchor=NW)
 enterevbutton.place(x=650, y=295, anchor=NW)
 graphevbutton.place(x=650, y=340, anchor=NW)
-
 clearcardsbutton.place(x=405, y=390, anchor=NW)
+increasefontbutton.place(x=600, y=390, anchor=NW)
+decreasefontbutton.place(x=600, y=440, anchor=NW)
+
 s = Style()
 s.theme_use('default')
 

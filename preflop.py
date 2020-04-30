@@ -26,8 +26,8 @@ for i in range(len(allmatchups)):
 
 def preflop(h1c1, h1c2, h2c1, h2c2):
     # generate preflop LUT
-
-
+    # order of hands
+    h = 1
     if (h1c1, h1c2, h2c1, h2c2) in preflopLUT:
         hand = (h1c1, h1c2, h2c1, h2c2)
     elif (h1c1, h1c2, h2c2, h2c1) in preflopLUT:
@@ -39,16 +39,24 @@ def preflop(h1c1, h1c2, h2c1, h2c2):
 
     elif (h2c1, h2c2, h1c1, h1c2) in preflopLUT:
         hand = (h2c1, h2c2, h1c1, h1c2)
+        h=2
     elif (h2c1, h2c2, h1c2, h1c1) in preflopLUT:
         hand = (h2c1, h2c2, h1c2, h1c1)
+        h=2
     elif (h2c2, h2c1, h1c1, h1c2) in preflopLUT:
         hand = (h2c1, h2c2, h1c1, h1c2)
+        h=2
     elif (h2c2, h2c1, h1c2, h1c1) in preflopLUT:
         hand = (h2c1, h2c2, h1c2, h1c1)
+        h=2
     else:
         print("matchup not found")
         return 0,0
     result = preflopLUT[hand]
-    winsper = 100 * float(result[0]) / 1712304
-    tiesper = 100 * float(result[1]) / 1712304
+    if h == 1:
+        winsper = 100 * float(result[0]) / 1712304
+        tiesper = 100 * float(result[1]) / 1712304
+    else:
+        winsper = 100 - (100 * float(result[0]) / 1712304)
+        tiesper = 100 * float(result[1]) / 1712304
     return winsper, tiesper
