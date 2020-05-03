@@ -3,7 +3,7 @@ from tkinter.ttk import *
 import tkinter.font as tkfont
 import opens
 import results
-import odds #comment out for gui testing
+#import odds #comment out for gui testing
 import tkinter.scrolledtext as scrolledtext
 
 window = Tk()
@@ -21,36 +21,148 @@ lg = tkfont.Font(family="TkDefaultFont", size=fontsize) # use for widgets that d
 tkfont.nametofont('TkDefaultFont').configure(size=fontsize) # change default font size
 luhand = StringVar()
 luhand.set("")
-position = IntVar()
-position.set(1)
-
+position = StringVar()
+position.set("BB")
+action = IntVar()
+action.set(1)
+players = IntVar()
+players.set(3)
+# TODO: add 2H and 3H options. Add Position options the separate scenario options for each posisition(BU limps SB 2.5x etc)
 def lookuphand():
     hand = luhand.get().lower()
     pos = position.get()
+
     result = ""
     if hand not in allhands:
         result = "invalid hand"
-    else:
-        if pos == 1:
-            result = opens.bu(hand)
-        if pos == 2:
-            result = opens.sb(hand)
-        if pos == 3:
-            result = opens.bb(hand)
-        if pos == 4:
-            result = opens.np(hand)
-        if pos == 5:
-            result = opens.nc(hand)
+        return None
+
     resultlabel.configure(text = result)
-lookuplabel = Label(window, text="PF lookup:", font=lg)
+    return None
 handentry = Entry(window, width = 4,font = lg, textvariable=luhand)
 resultlabel = Label(window, text="preflop hand", font=lg, justify = "center", anchor = "center")
 lookupbutton = Button(window, text='lookup', command=lookuphand, width = 7)
-rad1 = Radiobutton(window,text='BU open  ', value=1, variable=position)
-rad2 = Radiobutton(window,text='SB open  ', value=2, variable=position)
-rad3 = Radiobutton(window,text='BB defend', value=3, variable=position)
-rad4 = Radiobutton(window,text='Nash push', value=4, variable=position)
-rad5 = Radiobutton(window,text='Nash call', value=5, variable=position)
+
+BB = Radiobutton(window,text='BB', value="BB", variable=position)
+SB = Radiobutton(window,text='SB', value="SB", variable=position)
+BU = Radiobutton(window,text='BU', value="BU", variable=position)
+nash = Radiobutton(window,text='nash eq', value="n", variable=position)
+
+action1 = Radiobutton(window,text='', value=1, variable=action)
+action2 = Radiobutton(window,text='', value=2, variable=action)
+action3 = Radiobutton(window,text='', value=3, variable=action)
+action4 = Radiobutton(window,text='', value=4, variable=action)
+
+def set_position():
+    n = players.get()
+    pos = position.get()
+    act = action.get()
+    if n == 2:
+        BB.place(x=145, y=30, anchor=NW)
+        BU.place(x=200, y=30, anchor=NW)
+        BU.configure(text = "BU")
+        SB.place(x=0, y=0, anchor = SE)
+        nash.place(x=255, y=30, anchor=NW)
+        if pos == "n":
+            action.set(1)
+            action1.configure(text="push")
+            action2.configure(text="call")
+            action1.place(x=210, y=100, anchor=NW)
+            action2.place(x=210, y=140, anchor=NW)
+            action3.place(x=0, y=0, anchor=SE)
+            action4.place(x=0, y=0, anchor=SE)
+
+        if pos == "SB":
+            pos = "BU"
+            position.set(pos)
+        if pos == "BU":
+            action.set(1)
+            action1.configure(text = "opening")
+            action1.place(x = 210, y =100, anchor = NW)
+            action2.place(x=0, y=0, anchor = SE)
+            action3.place(x=0, y=0, anchor = SE)
+            action4.place(x=0, y=0, anchor=SE)
+
+        if pos == "BB":
+            action.set(1)
+            action1.configure(text = "BU limps")
+            action2.configure(text="BU raises")
+            action1.place(x = 210, y =100, anchor = NW)
+            action2.place(x=210, y=140, anchor = NW)
+            action3.place(x=0, y=0, anchor = SE)
+            action4.place(x=0, y=0, anchor=SE)
+
+    if n == 3:
+        BB.place(x=145, y=30, anchor=NW)
+        SB.place(x=200, y=30, anchor=NW)
+        BU.place(x=255, y=30, anchor=NW)
+        nash.place(x=0, y=0, anchor=SE)
+        BU.configure(text = "BU")
+        if pos == "SB":
+            action.set(1)
+            action1.configure(text="BU min-raise")
+            action2.configure(text="BU folds")
+            action1.place(x=210, y=100, anchor=NW)
+            action2.place(x=210, y=140, anchor=NW)
+            action3.place(x=0, y=0, anchor = SE)
+            action4.place(x=0, y=0, anchor=SE)
+
+        if pos == "BU":
+            action.set(1)
+            action1.configure(text = "opening")
+            action1.place(x = 210, y =100, anchor = NW)
+            action2.place(x=0, y=0, anchor = SE)
+            action3.place(x=0, y=0, anchor = SE)
+            action4.place(x=0, y=0, anchor=SE)
+
+        if pos == "BB":
+            action.set(1)
+            action1.configure(text="BU min-raise")
+            action2.configure(text="SB 2.5x raise")
+            action3.configure(text="BU limps")
+            action4.configure(text="SB limps")
+            action1.place(x=210, y=100, anchor=NW)
+            action2.place(x=210, y=140, anchor=NW)
+            action3.place(x=210, y=180, anchor=NW)
+            action4.place(x=210, y=220, anchor=NW)
+
+
+set_position()
+
+twohanded = Radiobutton(window, text = "2H", value = 2, variable = players, command = set_position)
+twohanded.place(x = 75, y = 30, anchor = NW)
+threehanded = Radiobutton(window, text = "3H", value = 3, variable = players, command = set_position)
+threehanded.place(x = 5, y = 30, anchor = NW)
+
+playerslabel = Label(window, text="players:", font=lg)
+playerslabel.place(x=15, y=0, anchor=NW)
+playersysep = Separator(window, orient=VERTICAL)
+playersysep.place(x=135, y=0,  height =65, anchor=NW)
+playershsep = Separator(window, orient=HORIZONTAL)
+playershsep.place(x=0, y=65,  width = 400, anchor=NW)
+
+positionlabel = Label(window, text="position:", font=lg)
+positionlabel.place(x=150, y=0, anchor=NW)
+
+preflopactionlabel = Label(window, text="preflop action:", font=lg)
+preflopactionlabel.place(x=210, y=65, anchor=NW)
+preflopactionysep = Separator(window, orient=VERTICAL)
+preflopactionysep.place(x=200, y=65,  height =185, anchor=NW)
+preflopactionhsep = Separator(window, orient=HORIZONTAL)
+preflopactionhsep.place(x=0, y=65,  width = 400, anchor=NW)
+
+BB.configure(command = set_position)
+SB.configure(command = set_position)
+BU.configure(command = set_position)
+nash.configure(command = set_position)
+
+
+resultlabel.place(x=105, y=100, anchor=CENTER)
+handentry.place(x=65, y=125, anchor=NW)
+lookupbutton.place(x=35, y=170, anchor=NW)
+
+
+
 
 
 # win tracking
@@ -241,13 +353,16 @@ def clear_cards():
     prizepoolvalue.set("")
     luhand.set("")
     winloss.set(0)
-    position.set(1)
     graphstakes.set("")
     hand1oddslabel.configure(text="0.00%")
     hand2oddslabel.configure(text="0.00%")
     tieoddslabel.configure(text="0.00%")
     evlabel.configure(text = "+0.0")
     resultlabel.configure(text = "preflop hand")
+    luhand.set("")
+    position.set("BB")
+    action.set(1)
+    players.set(3)
 
     return None
 
@@ -340,16 +455,7 @@ hsepbottom = Separator(window, orient=HORIZONTAL)
 hsepbottom.place(x=0, y=499,  width = 800, anchor=NW)
 
 #
-lookuplabel.place(x=15, y=0, anchor=NW)
-lookuplabel.place(x=15, y=0, anchor=NW)
-resultlabel.place(x=105, y=80, anchor=CENTER)
-handentry.place(x=65, y=110, anchor=NW)
-lookupbutton.place(x=35, y=160, anchor=NW)
-rad1.place(x=230, y=30, anchor=NW)
-rad2.place(x=230, y=70, anchor=NW)
-rad3.place(x=230, y=110, anchor=NW)
-rad4.place(x=230, y=150, anchor=NW)
-rad5.place(x=230, y=190, anchor=NW)
+
 #
 hsep2 = Separator(window, orient=HORIZONTAL)
 hsep2.place(x=0, y=385,  width = 800, anchor=NW)

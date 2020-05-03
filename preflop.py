@@ -32,6 +32,7 @@ def preflop(h1c1, h1c2, h2c1, h2c2):
         hand = (h1c1, h1c2, h2c1, h2c2)
     elif (h1c1, h1c2, h2c2, h2c1) in preflopLUT:
         hand = (h1c1, h1c2, h2c2, h2c1)
+
     elif (h1c2, h1c1, h2c1, h2c2) in preflopLUT:
         hand = (h1c2, h1c1, h2c1, h2c2)
     elif (h1c2, h1c1, h2c2, h2c1) in preflopLUT:
@@ -43,11 +44,12 @@ def preflop(h1c1, h1c2, h2c1, h2c2):
     elif (h2c1, h2c2, h1c2, h1c1) in preflopLUT:
         hand = (h2c1, h2c2, h1c2, h1c1)
         h=2
+
     elif (h2c2, h2c1, h1c1, h1c2) in preflopLUT:
-        hand = (h2c1, h2c2, h1c1, h1c2)
+        hand = (h2c2, h2c1, h1c1, h1c2)
         h=2
     elif (h2c2, h2c1, h1c2, h1c1) in preflopLUT:
-        hand = (h2c1, h2c2, h1c2, h1c1)
+        hand = (h2c2, h2c1, h1c2, h1c1)
         h=2
     else:
         print("matchup not found")
