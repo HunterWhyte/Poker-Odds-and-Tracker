@@ -31,12 +31,14 @@ players.set(3)
 def lookuphand():
     hand = luhand.get().lower()
     pos = position.get()
-
+    act = action.get()
+    n = players.get()
     result = ""
     if hand not in allhands:
         result = "invalid hand"
+        resultlabel.configure(text=result)
         return None
-
+    result = opens.lookup(hand,pos,act,n)
     resultlabel.configure(text = result)
     return None
 handentry = Entry(window, width = 4,font = lg, textvariable=luhand)
@@ -52,7 +54,7 @@ action1 = Radiobutton(window,text='', value=1, variable=action)
 action2 = Radiobutton(window,text='', value=2, variable=action)
 action3 = Radiobutton(window,text='', value=3, variable=action)
 action4 = Radiobutton(window,text='', value=4, variable=action)
-
+# TODO: make a button to view full chart open in tkinter image viewer thing :)
 def set_position():
     n = players.get()
     pos = position.get()
@@ -77,19 +79,22 @@ def set_position():
             position.set(pos)
         if pos == "BU":
             action.set(1)
-            action1.configure(text = "opening")
-            action1.place(x = 210, y =100, anchor = NW)
-            action2.place(x=0, y=0, anchor = SE)
-            action3.place(x=0, y=0, anchor = SE)
+            action1.configure(text = "15+ BBs")
+            action2.configure(text="10-15 BBs")
+            action3.configure(text="7-9 BBs")
+            action1.place(x=210, y=100, anchor=NW)
+            action2.place(x=210, y=140, anchor=NW)
+            action3.place(x=210, y=180, anchor=NW)
             action4.place(x=0, y=0, anchor=SE)
 
         if pos == "BB":
             action.set(1)
             action1.configure(text = "BU limps")
-            action2.configure(text="BU raises")
+            action2.configure(text="BU min-raises")
+            action3.configure(text="BU shove7-9B")
             action1.place(x = 210, y =100, anchor = NW)
             action2.place(x=210, y=140, anchor = NW)
-            action3.place(x=0, y=0, anchor = SE)
+            action3.place(x=210, y=180, anchor = NW)
             action4.place(x=0, y=0, anchor=SE)
 
     if n == 3:
